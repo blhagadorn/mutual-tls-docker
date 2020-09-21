@@ -1,0 +1,12 @@
+FROM golang:alpine
+
+# Copy the code into the container
+COPY client.go .
+COPY cert.pem .
+COPY key.pem .
+
+# Build the application
+RUN go build client.go
+
+# Command to run when starting the container
+CMD ["./client"]

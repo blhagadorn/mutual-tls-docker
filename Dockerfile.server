@@ -1,0 +1,15 @@
+FROM golang:alpine
+
+# Copy the code into the container
+COPY server.go .
+COPY cert.pem .
+COPY key.pem .
+
+# Build the application
+RUN go build server.go
+
+# Export necessary port
+EXPOSE 8443
+
+# Command to run when starting the container
+CMD ["./server"]

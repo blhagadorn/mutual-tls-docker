@@ -20,4 +20,21 @@ openssl req -newkey rsa:2048 \
 openssl pkcs12 -export -in cert.pem -inkey key.pem -out server.p12
 ```
 
+## Using Docker
+
+1. Build and start Docker containers
+```
+docker build -t mtls-server -f Dockerfile.server . && docker run --rm  -p 8433:8433 -it --network host mtls-server:latest
+docker build -t mtls-client -f Dockerfile.client . && docker run --rm -it --network host mtls-client:latest
+```
+
+2. Analyze network traffic
+```
+docker run -it --network host --rm dockersec/tcpdump tcpdump -A -i any port 8443 -c 200  tcpdump -i any port 8443 -c 200 -A
+```
+
+```
+docker run -it --network host --rm dockersec/tcpdump tcpdump -A -i any port 8443 -c 200  tcpdump -i any port 8080 -c 200 -A
+```
+
 

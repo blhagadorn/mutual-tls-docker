@@ -1,16 +1,17 @@
 FROM golang:alpine
 
 # Copy the code into the container
-COPY client-mtls.go .
-COPY client-no-mtls.go .
+COPY server-basic.go .
 
 # Copy cert and key
 COPY cert.pem .
 COPY key.pem .
 
 # Build the application
-RUN go build client-mtls.go
-RUN go build client-no-mtls.go
+RUN go build server-basic.go
+
+# Export necessary port
+EXPOSE 8080
 
 # Command to run when starting the container
-CMD ["./client"]
+CMD ["./server-basic"]

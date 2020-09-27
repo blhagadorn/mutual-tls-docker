@@ -29,12 +29,15 @@ docker build -t mtls-client -f Dockerfile.client . && docker run --rm -it --netw
 ```
 
 2. Analyze network traffic
-```
-docker run -it --network host --rm dockersec/tcpdump tcpdump -A -i any port 8443 -c 200  tcpdump -i any port 8443 -c 200 -A
-```
+
+Non-mutual TLS port traffic analysis:
 
 ```
-docker run -it --network host --rm dockersec/tcpdump tcpdump -A -i any port 8443 -c 200  tcpdump -i any port 8080 -c 200 -A
+docker run -it --network host --rm dockersec/tcpdump tcpdump -i any port 8080 -c 100 -A
 ```
+Mutual TLS port traffic analysis:
 
+```
+docker run -it --network host --rm dockersec/tcpdump tcpdump -i any port 8443 -c 100 -A
+```
 

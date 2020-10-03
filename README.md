@@ -1,4 +1,5 @@
 ### Mutual TLS Pod to Pod 
+Implementation of mutual transport layer security (TLS) between two docker containers running Go binaries
 
 ## Getting Started
 

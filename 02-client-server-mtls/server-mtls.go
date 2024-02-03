@@ -11,7 +11,7 @@ import (
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	// Write "Hello, world!" to the response body
-	io.WriteString(w, "Hello, world!\n")
+	io.WriteString(w, "Hello, world WITH mutual TLS!\n")
 }
 
 func main() {
@@ -39,5 +39,4 @@ func main() {
 
 	// Listen to HTTPS connections with the server certificate and wait
 	log.Fatal(server.ListenAndServeTLS("cert.pem", "key.pem"))
-
 }

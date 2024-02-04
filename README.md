@@ -50,3 +50,69 @@ Mutual TLS port traffic analysis:
 docker run -it --network host --rm dockersec/tcpdump tcpdump -i any port 8443 -c 100 -A
 ```
 
+## mTLS with Intermediate Certificates
+
+In the last example, we generated a root certificates and reused the same private key across the client and server, to make things simple.
+Next, in  `03-client-server-mtls-intermediate`:
+
+Generate the root certificate again:
+```
+openssl req -newkey rsa:2048 \
+  -nodes -x509 \
+  -days 3650 \
+  -keyout key.pem \
+  -out cert.pem \
+  -subj "/C=US/ST=Montana/L=Bozeman/O=Organization/OU=Unit/CN=localhost" \
+  -addext "subjectAltName = DNS:localhost"
+```
+
+Then, let's generate an intermediate certificate key for the client:  
+```
+openssl genrsa -out client_intermediate_key.pem 2048
+```
+
+Then the server:
+```
+openssl genrsa -out server_intermediate_key.pem 2048
+```
+
+Then let's generate some CSR's (Certificate Signing Requests). Because we are using SAN, we need some .cnf files. They are included in this directory for ease of use:
+
+For the client:  
+```
+openssl req -new -key client_intermediate_key.pem -out client_intermediate_csr.pem -config client_csr.cnf
+```
+
+For the server:  
+```
+openssl req -new -key server_intermediate_key.pem -out server_intermediate_csr.pem -config server_csr.cnf
+```
+
+Next, let's sign the CSR's
+
+For the client:
+
+```
+openssl x509 -req -days 3650 -in client_intermediate_csr.pem -CA cert.pem -CAkey key.pem -CAcreateserial -out client_intermediate_cert.pem -extfile client_ext.cnf
+```
+
+For the server:  
+
+```
+openssl x509 -req -days 3650 -in server_intermediate_csr.pem -CA cert.pem -CAkey key.pem -CAcreateserial -out server_intermediate_cert.pem -extfile server_ext.cnf
+```
+
+Alright, as you can see this is quite a few more steps, but now we have a better trust relationship.
+
+Let's run the docker commands to verify it's all working:
+
+```
+docker build -t mtls-server -f Dockerfile.server . && docker run --rm  -p 8433:8433 -it --network host mtls-server:latest
+```
+Then in another terminal:  
+```
+docker build -t mtls-client -f Dockerfile.client . && docker run --rm -it --network host mtls-client:latest
+> Hello, world WITH mutual TLS using intermediate certificates!
+```
+
+Success!

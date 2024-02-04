@@ -4,8 +4,9 @@ Implementation of mutual transport layer security (TLS) between two docker conta
 ## Getting Started
 
 1. Generate root key and certificates with CN (Common Name) and SAN (Subject Alternative Name) as `localhost`:
-Note: CN has been deprecated and most modern TLS libraries require SAN to to be set instead, including Golang's `net/http`
-Here, we set both, because some libraries still require CN to be set or use it as a fallback.
+
+_Note: CN has been deprecated and most modern TLS libraries require SAN to to be set instead, including Golang's `net/http`.
+Here, we set both, because some libraries still require CN to be set or use it as a fallback._
 
 First, change directories to the mTLS directory (and be sure to run all commands out of this directory):
 `cd 02-client-server-mtls`

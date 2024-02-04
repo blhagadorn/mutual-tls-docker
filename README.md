@@ -103,6 +103,22 @@ For the server:
 openssl x509 -req -days 3650 -in server_intermediate_csr.pem -CA cert.pem -CAkey key.pem -CAcreateserial -out server_intermediate_cert.pem -extfile server_ext.cnf
 ```
 
+Lastly, let's veriify that all the signing actually worked:
+
+For the client intermediate:
+```
+openssl verify -CAfile cert.pem client_intermediate_cert.pem
+>client_intermediate_cert.pem: OK
+```
+
+For the server intermediate
+
+```
+openssl verify -CAfile cert.pem server_intermediate_cert.pem
+>server_intermediate_cert.pem: OK
+```
+Perfect! The intermediate certificates have been verified by the root certificate `cert.pem`.
+
 Alright, as you can see this is quite a few more steps, but now we have a better trust relationship.
 
 Let's run the docker commands to verify it's all working:
